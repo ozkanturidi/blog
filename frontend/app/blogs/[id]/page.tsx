@@ -2,9 +2,11 @@ import { getSingePost } from "@/app/lib/utils";
 import { Avatar, Box, Flex, Text } from "@radix-ui/themes";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import { formatDate, formatImageUrl, formatReadMin } from "@/app/lib/helper";
+
+import Image from "next/image";
 const PostDetails = async ({ params }: { params: { id: string } }) => {
   const post = await getSingePost(params.id);
-  const { title, content, likesCount, createdAt, author } = post.attributes;
+  const { title, content, likesCount, createdAt, user } = post.attributes;
   return (
     <>
       <Box pt={"4"}>
@@ -16,7 +18,7 @@ const PostDetails = async ({ params }: { params: { id: string } }) => {
             <Avatar
               size="3"
               src={formatImageUrl(
-                post?.attributes?.author?.data?.attributes?.profilePicture?.data
+                post?.attributes?.user?.data?.attributes?.profilePicture?.data
                   ?.attributes?.formats?.thumbnail?.url ?? ""
               )}
               radius="full"
@@ -24,7 +26,7 @@ const PostDetails = async ({ params }: { params: { id: string } }) => {
             />
             <Flex direction={"column"}>
               <Text as="div" size="2" weight="medium">
-                {`${author?.data?.attributes?.firstName} ${author?.data?.attributes?.lastName}`}
+                {`${user?.data?.attributes?.firstName} ${user?.data?.attributes?.lastName}`}
               </Text>
 
               <Flex direction={"row"} gap={"4"}>
@@ -40,6 +42,14 @@ const PostDetails = async ({ params }: { params: { id: string } }) => {
             </Flex>
           </Box>
           <Text>{content}</Text>
+          <Image
+            src={formatImageUrl(
+              post?.attributes?.image?.data?.attributes?.url ?? ""
+            )}
+            alt="PostImage"
+            width={400}
+            height={400}
+          />
         </Flex>
       </Box>
     </>

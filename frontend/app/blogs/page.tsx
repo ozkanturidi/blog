@@ -8,6 +8,7 @@ import {
 } from "../lib/helper";
 import SearchBar from "@/components/blogs/searchBar";
 import Link from "next/link";
+import Image from "next/image";
 
 const Page = async ({
   searchParams,
@@ -46,7 +47,7 @@ const Page = async ({
                       <Avatar
                         size="3"
                         src={formatImageUrl(
-                          post?.attributes?.author?.data?.attributes
+                          post?.attributes?.user?.data?.attributes
                             ?.profilePicture?.data?.attributes?.formats
                             ?.thumbnail?.url ?? ""
                         )}
@@ -55,7 +56,7 @@ const Page = async ({
                       />
                       <Box>
                         <Text as="div" size="2" weight="bold">
-                          {`${post?.attributes?.author?.data?.attributes?.firstName} ${post?.attributes?.author?.data?.attributes?.lastName}`}
+                          {`${post?.attributes?.user?.data?.attributes?.firstName} ${post?.attributes?.user?.data?.attributes?.lastName}`}
                         </Text>
                       </Box>
                       <Text>{formatDate(post?.attributes?.createdAt)}</Text>
@@ -76,7 +77,7 @@ const Page = async ({
                     width={250}
                     height={250}
                   /> */}
-                      <img
+                      <Image
                         src={formatImageUrl(
                           post?.attributes?.image?.data?.attributes?.formats
                             ?.thumbnail.url ?? ""

@@ -1,13 +1,14 @@
-"use client";
-
-import { loginUser } from "@/app/lib/loginactions";
 import { Button, TextFieldInput } from "@radix-ui/themes";
-import { useFormState } from "react-dom";
+import axios from "axios";
 
 const LoginForm = () => {
-  const [state, loginAction] = useFormState(loginUser, null);
+  const submitHandler = async (e: any) => {
+    e?.preventDefault();
+    const formData = new FormData(e.target);
+    await axios.post("http://localhost:3000/login/api", formData);
+  };
   return (
-    <form action={loginAction}>
+    <form onSubmit={submitHandler}>
       <TextFieldInput type="email" name="email" />
       <TextFieldInput type="password" name="password" />
       <Button type="submit">Login</Button>

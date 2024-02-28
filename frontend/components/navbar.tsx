@@ -1,5 +1,4 @@
 "use client";
-
 import { Box, Flex } from "@radix-ui/themes";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -7,7 +6,7 @@ import { useEffect, useState } from "react";
 const Navbar = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
-
+  const [isLogged, setIsLogged] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
@@ -18,6 +17,19 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos, visible]);
+
+  const logoutHandler = () => {
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    localStorage.removeItem("isLoggedIn");
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("isLoggedIn") === "true") {
+      setIsLogged(true);
+    } else {
+      setIsLogged(false);
+    }
+  }, []);
 
   return (
     <Box
@@ -37,10 +49,15 @@ const Navbar = () => {
         <ul>
           <Flex align={"center"} gap="7" justify={"end"} pt={"4"} pr={"6"}>
             <Link href="/blogs">Blogs</Link>
-            <Link href="/blogs/create">Create Blog</Link>
+            {isLogged && <Link href="/blogs/create">Create Blog</Link>}
             <Link href="/contact">Contact</Link>
             <Link href="/about">About</Link>
-            <Link href="/login">Login</Link>
+            {!isLogged && <Link href="/login">Login</Link>}
+            {isLogged && (
+              <Link href={"/login"} onClick={logoutHandler}>
+                Logout
+              </Link>
+            )}
           </Flex>
         </ul>
       </nav>

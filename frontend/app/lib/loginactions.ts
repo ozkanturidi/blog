@@ -1,5 +1,7 @@
 import { cookies } from "next/headers";
 import BaseService from "@/services/baseService";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 const apiService = new BaseService();
 export const loginUser = async (currentState, formData: FormData) => {
@@ -11,10 +13,15 @@ export const loginUser = async (currentState, formData: FormData) => {
       identifier,
       password,
     });
-    cookies().set("jwt", response.jwt);
+    document.cookie = `token=${response.jwt}; path=/;`;
+    document.cookie = `user=${JSON.stringify(response.user)}; path=/;`;
+    localStorage.setItem("token", response.jwt);
+    localStorage.setItem("isLoggedIn", "true");
+    revalidatePath("/blogs");
   } catch (error) {
     console.log(error.message);
   }
+  redirect("/blogs");
 };
 
 export const createUser = async (currentState, formData: FormData) => {

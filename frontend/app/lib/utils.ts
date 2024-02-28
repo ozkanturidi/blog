@@ -1,7 +1,7 @@
 import axios from "axios";
 import BaseService from "@/services/baseService";
 import { Post } from "../blogs/types";
-
+import { unstable_noStore as noStore } from "next/cache";
 const apiService = new BaseService();
 export interface PostsType {
   data: Post[];
@@ -16,10 +16,11 @@ export interface PostsType {
 }
 
 export const getPosts = async (params: any) => {
+  noStore();
   const response: PostsType = await apiService.get(
     `posts?filters[title][$contains]=${
       params || ""
-    }&populate[author][populate][0]=profilePicture&populate=image`,
+    }&populate[user][populate][0]=profilePicture&populate=image`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -31,8 +32,9 @@ export const getPosts = async (params: any) => {
 };
 
 export const getSingePost = async (id: string) => {
+  noStore();
   const response = await apiService.get(
-    `posts/${id}?populate[author][populate][0]=profilePicture&populate=image`,
+    `posts/${id}?populate[user][populate][0]=profilePicture&populate=image`,
     {
       headers: {
         "Content-Type": "application/json",
